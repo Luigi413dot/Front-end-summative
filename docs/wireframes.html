@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinTrack – Wireframe Sketches (M1)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Inter:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f1eb;
+      color: #2d2d2d;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #1a1a2e;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .breakpoints-legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .breakpoints-legend span {
+      font-size: 0.85rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .bp-mobile { background: #fde68a; color: #92400e; }
+    .bp-tablet { background: #bfdbfe; color: #1e40af; }
+    .bp-desktop { background: #bbf7d0; color: #166534; }
+
+    .wireframes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .wireframe-card {
+      background: #fff;
+      border: 2px solid #2d2d2d;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 4px 4px 0 #2d2d2d;
+      transition: transform 0.2s;
+    }
+
+    .wireframe-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .wireframe-card h2 {
+      font-family: 'Architects Daughter', cursive;
+      background: #1a1a2e;
+      color: #fff;
+      padding: 0.8rem 1.2rem;
+      font-size: 1.2rem;
+      letter-spacing: 0.5px;
+    }
+
+    .wireframe-body {
+      padding: 1.2rem;
+      font-family: 'Architects Daughter', cursive;
+      font-size: 0.95rem;
+      min-height: 400px;
+      position: relative;
+    }
+
+    /* Wireframe drawing styles */
+    .wf-box {
+      border: 2px dashed #9ca3af;
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 0.6rem;
+      background: #f9fafb;
+      position: relative;
+    }
+
+    .wf-box.header-box {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+
+    .wf-box.nav-box {
+      border-color: #8b5cf6;
+      background: #f5f3ff;
+    }
+
+    .wf-box.main-box {
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .wf-box.footer-box {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    .wf-box.form-box {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .wf-label {
+      position: absolute;
+      top: -10px;
+      right: 8px;
+      background: #fff;
+      padding: 0 4px;
+      font-size: 0.7rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .wf-label.blue { color: #3b82f6; }
+    .wf-label.purple { color: #8b5cf6; }
+    .wf-label.green { color: #10b981; }
+    .wf-label.orange { color: #f59e0b; }
+    .wf-label.red { color: #ef4444; }
+
+    .wf-input {
+      display: block;
+      width: 100%;
+      border: 1.5px solid #d1d5db;
+      border-radius: 4px;
+      padding: 0.35rem 0.5rem;
+      margin: 0.3rem 0;
+      background: #fff;
+      font-family: 'Architects Daughter', cursive;
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    .wf-btn {
+      display: inline-block;
+      border: 2px solid #2d2d2d;
+      border-radius: 6px;
+      padding: 0.35rem 1rem;
+      margin: 0.2rem 0.3rem 0.2rem 0;
+      background: #e5e7eb;
+      font-family: 'Architects Daughter', cursive;
+      font-size: 0.85rem;
+      cursor: default;
+    }
+
+    .wf-btn.primary {
+      background: #2563eb;
+      color: #fff;
+      border-color: #1d4ed8;
+    }
+
+    .wf-row {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.4rem 0;
+      align-items: center;
+    }
+
+    .wf-row > * {
+      flex: 1;
+    }
+
+    .wf-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5rem 0;
+      font-size: 0.8rem;
+    }
+
+    .wf-table th, .wf-table td {
+      border: 1px solid #d1d5db;
+      padding: 0.3rem 0.5rem;
+      text-align: left;
+    }
+
+    .wf-table th {
+      background: #e5e7eb;
+      font-size: 0.75rem;
+    }
+
+    .wf-stat {
+      display: inline-block;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      margin: 0.2rem;
+      background: #fff;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    .wf-stat .val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      display: block;
+    }
+
+    .wf-stat .lbl {
+      font-size: 0.65rem;
+      color: #6b7280;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .wf-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 60px;
+      margin: 0.5rem 0;
+      padding: 0.3rem;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      background: #f9fafb;
+    }
+
+    .wf-bar {
+      flex: 1;
+      background: #3b82f6;
+      border-radius: 2px 2px 0 0;
+      opacity: 0.7;
+    }
+
+    .annotation {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      color: #dc2626;
+      font-style: italic;
+      margin: 0.3rem 0;
+      padding-left: 0.5rem;
+      border-left: 2px solid #dc2626;
+    }
+
+    .skip-link-demo {
+      background: #fde68a;
+      color: #92400e;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-family: 'Inter', sans-serif;
+      display: inline-block;
+      margin-bottom: 0.3rem;
+    }
+
+    .wf-progress {
+      width: 100%;
+      height: 16px;
+      background: #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0.3rem 0;
+    }
+
+    .wf-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      border-radius: 8px;
+      width: 65%;
+    }
+
+    .wf-error {
+      color: #dc2626;
+      font-size: 0.8rem;
+      margin-top: 0.1rem;
+    }
+
+    .section-divider {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+      border-top: 2px dashed #d1d5db;
+      margin-top: 1rem;
+    }
+
+    .notes-section {
+      max-width: 1400px;
+      margin: 3rem auto 0;
+      padding: 1.5rem;
+      background: #fff;
+      border: 2px solid #2d2d2d;
+      border-radius: 12px;
+      box-shadow: 4px 4px 0 #2d2d2d;
+    }
+
+    .notes-section h2 {
+      font-family: 'Architects Daughter', cursive;
+      margin-bottom: 1rem;
+      color: #1a1a2e;
+    }
+
+    .notes-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .notes-section li {
+      padding: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      font-size: 0.9rem;
+    }
+
+    .notes-section li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #3b82f6;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .wireframes-grid {
+        grid-template-columns: 1fr;
+      }
+      body { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📐 FinTrack — Wireframe Sketches</h1>
+  <p class="subtitle">Student Finance Tracker • Milestone 1 • Mobile-First Responsive Design</p>
+
+  <div class="breakpoints-legend">
+    <span class="bp-mobile">📱 Mobile ≤ 360px</span>
+    <span class="bp-tablet">📱 Tablet ≤ 768px</span>
+    <span class="bp-desktop">💻 Desktop ≥ 1024px</span>
+  </div>
+
+  <div class="wireframes-grid">
+
+    <!-- ==================== 1. ABOUT PAGE ==================== -->
+    <div class="wireframe-card">
+      <h2>1. About Page</h2>
+      <div class="wireframe-body">
+        <span class="skip-link-demo">⌨️ [Skip to content]</span>
+
+        <div class="wf-box header-box">
+          <span class="wf-label blue">&lt;header&gt;</span>
+          <strong>🏦 FinTrack</strong>
+          <div class="wf-box nav-box" style="margin-top:0.4rem;margin-bottom:0">
+            <span class="wf-label purple">&lt;nav&gt;</span>
+            <div class="wf-row">
+              <span class="wf-btn">About</span>
+              <span class="wf-btn">Dashboard</span>
+              <span class="wf-btn">Records</span>
+              <span class="wf-btn">Settings</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-box main-box">
+          <span class="wf-label green">&lt;main&gt;</span>
+          <h3 style="margin-bottom:0.4rem">About FinTrack</h3>
+          <p style="color:#6b7280;font-size:0.85rem">
+            FinTrack helps students manage personal finances.
+            Track spending, set budgets, and stay on top of your money.
+          </p>
+          <br/>
+          <strong>Contact</strong><br/>
+          📧 student@email.com<br/>
+          🔗 github.com/student/fintrack
+        </div>
+
+        <div class="wf-box footer-box">
+          <span class="wf-label orange">&lt;footer&gt;</span>
+          © 2025 FinTrack — Built for WEB2 Summative
+        </div>
+
+        <div class="annotation">
+          Landmarks: header → nav → main → footer<br/>
+          Skip-to-content link is first focusable element
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 2. DASHBOARD ==================== -->
+    <div class="wireframe-card">
+      <h2>2. Dashboard / Stats</h2>
+      <div class="wireframe-body">
+        <div class="wf-box main-box">
+          <span class="wf-label green">&lt;main&gt; &lt;section&gt;</span>
+
+          <h3 style="margin-bottom:0.5rem">📊 Dashboard</h3>
+
+          <div class="wf-row" style="flex-wrap:wrap">
+            <div class="wf-stat">
+              <span class="val">24</span>
+              <span class="lbl">Total Records</span>
+            </div>
+            <div class="wf-stat">
+              <span class="val">R1,250</span>
+              <span class="lbl">Total Spent</span>
+            </div>
+            <div class="wf-stat">
+              <span class="val">Food</span>
+              <span class="lbl">Top Category</span>
+            </div>
+          </div>
+
+          <div style="margin-top:0.6rem">
+            <strong style="font-size:0.85rem">Last 7 Days</strong>
+            <div class="wf-chart">
+              <div class="wf-bar" style="height:40%"></div>
+              <div class="wf-bar" style="height:70%"></div>
+              <div class="wf-bar" style="height:30%"></div>
+              <div class="wf-bar" style="height:90%"></div>
+              <div class="wf-bar" style="height:50%"></div>
+              <div class="wf-bar" style="height:20%"></div>
+              <div class="wf-bar" style="height:60%"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:0.8rem">
+            <strong style="font-size:0.85rem">Budget Cap: R2,000</strong>
+            <div class="wf-progress">
+              <div class="wf-progress-fill"></div>
+            </div>
+            <span style="font-size:0.8rem;color:#10b981">✓ R750 remaining</span>
+          </div>
+        </div>
+
+        <div class="annotation">
+          aria-live="polite" on budget remaining<br/>
+          aria-live="assertive" when budget exceeded<br/>
+          Stats cards reflow to stack on mobile
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 3. RECORDS TABLE ==================== -->
+    <div class="wireframe-card">
+      <h2>3. Records Table</h2>
+      <div class="wireframe-body">
+        <div class="wf-box main-box">
+          <span class="wf-label green">&lt;main&gt; &lt;section&gt;</span>
+
+          <div class="wf-row">
+            <input class="wf-input" placeholder="🔍 Search with regex..." style="flex:3" />
+            <label style="font-size:0.8rem;flex:none;display:flex;align-items:center;gap:4px">
+              <input type="checkbox" /> Case-insensitive
+            </label>
+          </div>
+
+          <div class="wf-row">
+            <select class="wf-input" style="flex:1">
+              <option>Sort by: Date ↓</option>
+            </select>
+            <span class="wf-btn primary" style="flex:none">+ Add New</span>
+          </div>
+
+          <table class="wf-table">
+            <thead>
+              <tr>
+                <th>Description ↕</th>
+                <th>Amount ↕</th>
+                <th>Category</th>
+                <th>Date ↕</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Lunch at cafeteria</td>
+                <td>R12.50</td>
+                <td>Food</td>
+                <td>2025-09-25</td>
+                <td>✏️ 🗑️</td>
+              </tr>
+              <tr>
+                <td>Chemistry textbook</td>
+                <td>R89.99</td>
+                <td>Books</td>
+                <td>2025-09-23</td>
+                <td>✏️ 🗑️</td>
+              </tr>
+              <tr>
+                <td>Bus pass</td>
+                <td>R45.00</td>
+                <td>Transport</td>
+                <td>2025-09-20</td>
+                <td>✏️ 🗑️</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="annotation">
+          &lt;table&gt; with scope="col" on &lt;th&gt;<br/>
+          aria-sort on sortable columns<br/>
+          On mobile (≤768px): switch to card layout<br/>
+          &lt;mark&gt; used for regex match highlights<br/>
+          aria-live="polite" for result count
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 4. ADD/EDIT FORM ==================== -->
+    <div class="wireframe-card">
+      <h2>4. Add / Edit Form</h2>
+      <div class="wireframe-body">
+        <div class="wf-box form-box">
+          <span class="wf-label red">&lt;form&gt;</span>
+
+          <h3 style="margin-bottom:0.5rem">Add Transaction</h3>
+
+          <label style="font-size:0.85rem;font-weight:600">Description *</label>
+          <input class="wf-input" placeholder="e.g., Lunch at cafeteria" />
+          <div class="wf-error">⚠ No leading/trailing spaces allowed</div>
+
+          <label style="font-size:0.85rem;font-weight:600;margin-top:0.4rem;display:block">Amount (R) *</label>
+          <input class="wf-input" placeholder="e.g., 12.50" />
+          <div class="wf-error" style="visibility:hidden">placeholder</div>
+
+          <label style="font-size:0.85rem;font-weight:600;margin-top:0.4rem;display:block">Category *</label>
+          <select class="wf-input">
+            <option>-- Select --</option>
+            <option>Food</option>
+            <option>Books</option>
+            <option>Transport</option>
+            <option>Entertainment</option>
+            <option>Fees</option>
+            <option>Other</option>
+          </select>
+
+          <label style="font-size:0.85rem;font-weight:600;margin-top:0.4rem;display:block">Date *</label>
+          <input class="wf-input" type="date" />
+
+          <div class="wf-row" style="margin-top:0.8rem">
+            <span class="wf-btn primary">💾 Save</span>
+            <span class="wf-btn">Cancel</span>
+          </div>
+        </div>
+
+        <div class="annotation">
+          Every &lt;input&gt; has &lt;label for="..."&gt;<br/>
+          aria-describedby links to error &lt;span&gt;<br/>
+          aria-invalid="true" on validation failure<br/>
+          role="alert" on error messages<br/>
+          Focus returns to trigger on cancel
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== 5. SETTINGS ==================== -->
+    <div class="wireframe-card">
+      <h2>5. Settings</h2>
+      <div class="wireframe-body">
+        <div class="wf-box main-box">
+          <span class="wf-label green">&lt;main&gt; &lt;section&gt;</span>
+
+          <h3 style="margin-bottom:0.5rem">⚙️ Settings</h3>
+
+          <label style="font-size:0.85rem;font-weight:600">Base Currency</label>
+          <select class="wf-input">
+            <option>ZAR (South African Rand)</option>
+            <option>USD (US Dollar)</option>
+            <option>EUR (Euro)</option>
+          </select>
+
+          <label style="font-size:0.85rem;font-weight:600;margin-top:0.5rem;display:block">Exchange Rates (Manual)</label>
+          <div class="wf-row">
+            <span style="font-size:0.85rem;flex:none">1 ZAR =</span>
+            <input class="wf-input" placeholder="0.055" style="width:80px" />
+            <span style="font-size:0.85rem;flex:none">USD</span>
+          </div>
+          <div class="wf-row">
+            <span style="font-size:0.85rem;flex:none">1 ZAR =</span>
+            <input class="wf-input" placeholder="0.051" style="width:80px" />
+            <span style="font-size:0.85rem;flex:none">EUR</span>
+          </div>
+
+          <label style="font-size:0.85rem;font-weight:600;margin-top:0.5rem;display:block">Monthly Budget Cap</label>
+          <input class="wf-input" placeholder="e.g., 2000" />
+
+          <label style="font-size:0.85rem;font-weight:600;margin-top:0.5rem;display:block">Data Management</label>
+          <div class="wf-row" style="margin-top:0.3rem">
+            <span class="wf-btn">📤 Export JSON</span>
+            <span class="wf-btn">📥 Import JSON</span>
+          </div>
+
+          <div class="wf-row" style="margin-top:0.5rem">
+            <span class="wf-btn primary">💾 Save Settings</span>
+          </div>
+        </div>
+
+        <div class="annotation">
+          All settings saved to localStorage<br/>
+          JSON import validates structure before loading<br/>
+          Budget cap updates ARIA live region on dashboard
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== LAYOUT NOTES ==================== -->
+  <div class="notes-section">
+    <h2>📱 Responsive Layout Notes</h2>
+    <ul>
+      <li><strong>Mobile (≤360px):</strong> Single column, hamburger menu, card-based records, stacked stats</li>
+      <li><strong>Tablet (≤768px):</strong> Two-column stats, table with horizontal scroll or card fallback</li>
+      <li><strong>Desktop (≥1024px):</strong> Full table, sidebar-style dashboard, spacious grid layout</li>
+      <li><strong>Navigation:</strong> Horizontal tabs on desktop, collapsed hamburger on mobile</li>
+      <li><strong>Forms:</strong> Full-width on mobile, constrained max-width on desktop</li>
+      <li><strong>CSS approach:</strong> Mobile-first with min-width media queries</li>
+      <li><strong>Touch targets:</strong> Minimum 44×44px on mobile for all interactive elements</li>
+    </ul>
+  </div>
+
+  <div class="notes-section" style="margin-top:1.5rem">
+    <h2>🎨 Design System Tokens</h2>
+    <ul>
+      <li><strong>Primary:</strong> #2563eb (Blue 600) — buttons, links, active states</li>
+      <li><strong>Background:</strong> #ffffff (light) / #121212 (dark)</li>
+      <li><strong>Text:</strong> #1a1a2e (light) / #e0e0e0 (dark)</li>
+      <li><strong>Error:</strong> #dc2626 — validation errors</li>
+      <li><strong>Success:</strong> #16a34a — confirmations, within budget</li>
+      <li><strong>Warning:</strong> #f59e0b — approaching budget limit</li>
+      <li><strong>Border radius:</strong> 8px (cards), 6px (buttons), 4px (inputs)</li>
+      <li><strong>Font:</strong> Inter for UI, system-ui fallback</li>
+      <li><strong>Spacing scale:</strong> 4px base unit (0.25rem increments)</li>
+    </ul>
+  </div>
+
+</body>
+</html>
