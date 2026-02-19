@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="FinTrack – Automated test assertions for validators, state, and storage modules." />
+    <title>FinTrack – Test Assertions</title>
+
+    <!-- Reuse app styles for consistent look -->
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+
+    <style>
+        /* ── Test-specific styles ──────────────────────────── */
+        .test-page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: var(--sp-6) var(--sp-4);
+        }
+
+        .test-page__header {
+            text-align: center;
+            margin-bottom: var(--sp-8);
+        }
+
+        .test-page__title {
+            font-size: var(--fs-2xl);
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: var(--sp-2);
+        }
+
+        .test-page__subtitle {
+            color: var(--color-text-secondary);
+            font-size: var(--fs-base);
+        }
+
+        /* Summary bar */
+        .test-summary {
+            display: flex;
+            gap: var(--sp-4);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--sp-6);
+            padding: var(--sp-4);
+            border-radius: var(--radius-lg);
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+        }
+
+        .test-summary__item {
+            font-size: var(--fs-lg);
+            font-weight: 600;
+        }
+
+        .test-summary__item--total {
+            color: var(--color-text-primary);
+        }
+
+        .test-summary__item--pass {
+            color: var(--color-success);
+        }
+
+        .test-summary__item--fail {
+            color: var(--color-error);
+        }
+
+        /* Suite card */
+        .test-suite {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--sp-4);
+            overflow: hidden;
+        }
+
+        .test-suite__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--sp-4) var(--sp-5);
+            background: var(--color-bg-tertiary, rgba(0, 0, 0, .02));
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .test-suite__header:hover {
+            background: var(--color-bg-secondary, rgba(0, 0, 0, .04));
+        }
+
+        .test-suite__name {
+            font-weight: 600;
+            font-size: var(--fs-base);
+        }
+
+        .test-suite__badge {
+            font-size: var(--fs-sm);
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .test-suite__badge--pass {
+            background: rgba(22, 163, 74, 0.12);
+            color: var(--color-success);
+        }
+
+        .test-suite__badge--fail {
+            background: rgba(220, 38, 38, 0.12);
+            color: var(--color-error);
+        }
+
+        .test-suite__body {
+            padding: 0 var(--sp-5) var(--sp-4);
+        }
+
+        /* Individual test row */
+        .test-row {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--sp-3);
+            padding: var(--sp-2) 0;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--fs-sm);
+        }
+
+        .test-row:last-child {
+            border-bottom: none;
+        }
+
+        .test-row__icon {
+            flex-shrink: 0;
+            width: 22px;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .test-row__label {
+            flex: 1;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        .test-row--pass .test-row__label {
+            color: var(--color-text-primary);
+        }
+
+        .test-row--fail .test-row__label {
+            color: var(--color-error);
+            font-weight: 500;
+        }
+
+        .test-back-link {
+            display: inline-block;
+            margin-top: var(--sp-6);
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .test-back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-page">
+
+        <div class="test-page__header">
+            <h1 class="test-page__title">🧪 FinTrack – Test Assertions</h1>
+            <p class="test-page__subtitle">
+                Automated unit tests for validators, state management, and storage modules.
+            </p>
+        </div>
+
+        <!-- Summary (populated by JS) -->
+        <div class="test-summary" id="test-summary" aria-live="polite">
+            <span class="test-summary__item test-summary__item--total" id="summary-total">Running…</span>
+        </div>
+
+        <!-- Test results container -->
+        <div id="test-results"></div>
+
+        <a href="index.html" class="test-back-link">← Back to FinTrack</a>
+
+    </div>
+
+    <!-- Load application modules (needed for testing) -->
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/validators.js"></script>
+    <script src="scripts/state.js"></script>
+
+    <script>
+        /* =============================================================
+           FINTRACK – Test Runner (Vanilla JS Assertions)
+           No external libraries; uses simple assert-style functions.
+           ============================================================= */
+        (function () {
+            'use strict';
+
+            // ── Tiny test framework ────────────────────────────
+            const suites = [];
+            let currentSuite = null;
+
+            function describe(name, fn) {
+                currentSuite = { name, tests: [], pass: 0, fail: 0 };
+                fn();
+                suites.push(currentSuite);
+                currentSuite = null;
+            }
+
+            function it(label, fn) {
+                try {
+                    fn();
+                    currentSuite.tests.push({ label, passed: true });
+                    currentSuite.pass++;
+                } catch (err) {
+                    currentSuite.tests.push({ label, passed: false, error: err.message });
+                    currentSuite.fail++;
+                }
+            }
+
+            function assert(condition, message) {
+                if (!condition) throw new Error(message || 'Assertion failed');
+            }
+
+            function assertEqual(actual, expected, label) {
+                if (actual !== expected) {
+                    throw new Error(`${label || 'assertEqual'}: expected "${expected}", got "${actual}"`);
+                }
+            }
+
+            function assertDeepEqual(actual, expected, label) {
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    throw new Error(
+                        `${label || 'assertDeepEqual'}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`
+                    );
+                }
+            }
+
+            // ── Helper: reset localStorage for isolation ──────
+            function clearStorage() {
+                localStorage.removeItem('appData');
+                localStorage.removeItem('appSettings');
+            }
+
+            // ================================================================
+            //  SUITE 1 – Regex Validation Rules (validators.js)
+            // ================================================================
+
+            describe('Regex Validation – Description (Rule 1)', function () {
+                const V = window.FinTrackValidators;
+
+                it('accepts a normal description', function () {
+                    const r = V.validateField('description', 'Lunch at cafeteria');
+                    assert(r.valid, 'Should be valid');
+                });
+
+                it('accepts a single-character description', function () {
+                    const r = V.validateField('description', 'X');
+                    assert(r.valid, 'Single char should be valid');
+                });
+
+                it('rejects leading space', function () {
+                    const r = V.validateField('description', ' Lunch');
+                    assert(!r.valid, 'Leading space should fail');
+                });
+
+                it('rejects trailing space', function () {
+                    const r = V.validateField('description', 'Lunch ');
+                    assert(!r.valid, 'Trailing space should fail');
+                });
+
+                it('rejects empty string', function () {
+                    const r = V.validateField('description', '');
+                    assert(!r.valid, 'Empty should fail');
+                });
+
+                it('rejects double spaces', function () {
+                    const r = V.validateField('description', 'Lunch  at  cafeteria');
+                    assert(!r.valid, 'Double spaces should fail');
+                });
+
+                it('accepts description with interior spaces', function () {
+                    const r = V.validateField('description', 'Coffee with friends');
+                    assert(r.valid, 'Interior spaces should be valid');
+                });
+            });
+
+            describe('Regex Validation – Amount (Rule 2)', function () {
+                const V = window.FinTrackValidators;
+
+                it('accepts zero', function () {
+                    assert(V.validateField('amount', '0').valid);
+                });
+
+                it('accepts whole number', function () {
+                    assert(V.validateField('amount', '42').valid);
+                });
+
+                it('accepts amount with one decimal place', function () {
+                    assert(V.validateField('amount', '12.5').valid);
+                });
+
+                it('accepts amount with two decimal places', function () {
+                    assert(V.validateField('amount', '99.99').valid);
+                });
+
+                it('rejects three decimal places', function () {
+                    assert(!V.validateField('amount', '12.345').valid);
+                });
+
+                it('rejects negative number', function () {
+                    assert(!V.validateField('amount', '-5').valid);
+                });
+
+                it('rejects leading zeroes (e.g., "007")', function () {
+                    assert(!V.validateField('amount', '007').valid);
+                });
+
+                it('rejects alphabetic input', function () {
+                    assert(!V.validateField('amount', 'abc').valid);
+                });
+
+                it('rejects empty string', function () {
+                    assert(!V.validateField('amount', '').valid);
+                });
+            });
+
+            describe('Regex Validation – Date (Rule 3)', function () {
+                const V = window.FinTrackValidators;
+
+                it('accepts valid date 2025-09-25', function () {
+                    assert(V.validateField('date', '2025-09-25').valid);
+                });
+
+                it('accepts valid date 2025-01-01', function () {
+                    assert(V.validateField('date', '2025-01-01').valid);
+                });
+
+                it('accepts valid date 2025-12-31', function () {
+                    assert(V.validateField('date', '2025-12-31').valid);
+                });
+
+                it('rejects invalid month 13', function () {
+                    assert(!V.validateField('date', '2025-13-01').valid);
+                });
+
+                it('rejects invalid day 32', function () {
+                    assert(!V.validateField('date', '2025-01-32').valid);
+                });
+
+                it('rejects wrong format (DD-MM-YYYY)', function () {
+                    assert(!V.validateField('date', '25-09-2025').valid);
+                });
+
+                it('rejects empty string', function () {
+                    assert(!V.validateField('date', '').valid);
+                });
+
+                it('rejects month 00', function () {
+                    assert(!V.validateField('date', '2025-00-15').valid);
+                });
+
+                it('rejects day 00', function () {
+                    assert(!V.validateField('date', '2025-05-00').valid);
+                });
+            });
+
+            describe('Regex Validation – Category (Rule 4)', function () {
+                const V = window.FinTrackValidators;
+
+                it('accepts single word', function () {
+                    assert(V.validateField('category', 'Food').valid);
+                });
+
+                it('accepts multi-word with space', function () {
+                    assert(V.validateField('category', 'Eating Out').valid);
+                });
+
+                it('accepts hyphenated category', function () {
+                    assert(V.validateField('category', 'Self-Care').valid);
+                });
+
+                it('rejects numbers', function () {
+                    assert(!V.validateField('category', 'Category1').valid);
+                });
+
+                it('rejects empty string', function () {
+                    assert(!V.validateField('category', '').valid);
+                });
+
+                it('rejects special chars', function () {
+                    assert(!V.validateField('category', 'Food & Drink').valid);
+                });
+            });
+
+            describe('Advanced Regex – Duplicate Words (Rule 5, back-reference)', function () {
+                const V = window.FinTrackValidators;
+
+                it('detects "the the" as duplicate', function () {
+                    const r = V.checkDuplicateWords('I went to the the shop');
+                    assert(r.hasDuplicates, 'Should detect duplicates');
+                    assertEqual(r.match, 'the the');
+                });
+
+                it('detects "big big" as duplicate', function () {
+                    const r = V.checkDuplicateWords('A big big expense');
+                    assert(r.hasDuplicates);
+                });
+
+                it('does not flag normal text', function () {
+                    const r = V.checkDuplicateWords('Lunch at cafeteria');
+                    assert(!r.hasDuplicates, 'Should NOT detect duplicates');
+                });
+
+                it('returns null match when no duplicates', function () {
+                    const r = V.checkDuplicateWords('No duplicates here');
+                    assertEqual(r.match, null);
+                });
+
+                it('case-insensitive: detects "The the"', function () {
+                    const r = V.checkDuplicateWords('The the store');
+                    assert(r.hasDuplicates, 'Case-insensitive should match');
+                });
+            });
+
+            // ================================================================
+            //  SUITE 2 – Form-level Validation
+            // ================================================================
+
+            describe('Form Validation (validateForm)', function () {
+                const V = window.FinTrackValidators;
+
+                it('returns valid for correct data', function () {
+                    const result = V.validateForm({
+                        description: 'Coffee',
+                        amount: '5.50',
+                        category: 'Food',
+                        date: '2025-10-01'
+                    });
+                    assert(result.isValid, 'Should be valid');
+                    assertDeepEqual(result.errors, {});
+                });
+
+                it('returns errors for empty fields', function () {
+                    const result = V.validateForm({
+                        description: '',
+                        amount: '',
+                        category: '',
+                        date: ''
+                    });
+                    assert(!result.isValid, 'Should be invalid');
+                    assert('description' in result.errors, 'description error');
+                    assert('amount' in result.errors, 'amount error');
+                    assert('category' in result.errors, 'category error');
+                    assert('date' in result.errors, 'date error');
+                });
+
+                it('returns errors only for invalid fields', function () {
+                    const result = V.validateForm({
+                        description: 'Valid',
+                        amount: 'abc',
+                        category: 'Food',
+                        date: '2025-10-01'
+                    });
+                    assert(!result.isValid);
+                    assert('amount' in result.errors);
+                    assert(!('description' in result.errors));
+                    assert(!('category' in result.errors));
+                    assert(!('date' in result.errors));
+                });
+
+                it('includes duplicate word warning', function () {
+                    const result = V.validateForm({
+                        description: 'the the lunch',
+                        amount: '10',
+                        category: 'Food',
+                        date: '2025-10-01'
+                    });
+                    assert(result.duplicateWarning !== null, 'Should have duplicate warning');
+                });
+
+                it('no duplicate warning for clean description', function () {
+                    const result = V.validateForm({
+                        description: 'Lunch',
+                        amount: '10',
+                        category: 'Food',
+                        date: '2025-10-01'
+                    });
+                    assertEqual(result.duplicateWarning, null);
+                });
+            });
+
+            // ================================================================
+            //  SUITE 3 – Regex Search & Highlight (compileRegex, highlight)
+            // ================================================================
+
+            describe('Regex Search & Highlight', function () {
+                const V = window.FinTrackValidators;
+
+                it('compileRegex returns RegExp for valid pattern', function () {
+                    const re = V.compileRegex('test');
+                    assert(re instanceof RegExp, 'Should return a RegExp');
+                });
+
+                it('compileRegex returns null for invalid pattern', function () {
+                    const re = V.compileRegex('[invalid');
+                    assertEqual(re, null);
+                });
+
+                it('compileRegex returns null for empty string', function () {
+                    const re = V.compileRegex('');
+                    assertEqual(re, null);
+                });
+
+                it('compileRegex applies flags correctly', function () {
+                    const re = V.compileRegex('test', 'gi');
+                    assert(re.global, 'Should have global flag');
+                    assert(re.ignoreCase, 'Should have ignore-case flag');
+                });
+
+                it('highlight wraps match in <mark>', function () {
+                    const re = /coffee/gi;
+                    const result = V.highlight('I love coffee', re);
+                    assert(result.includes('<mark>coffee</mark>'), 'Should contain mark tag');
+                });
+
+                it('highlight returns original text when no regex', function () {
+                    const result = V.highlight('Hello World', null);
+                    assertEqual(result, 'Hello World');
+                });
+
+                it('highlight handles multiple matches', function () {
+                    const re = /a/gi;
+                    const result = V.highlight('abracadabra', re);
+                    const markCount = (result.match(/<mark>/g) || []).length;
+                    assertEqual(markCount, 5, 'Should highlight all 5 "a" characters');
+                });
+            });
+
+            // ================================================================
+            //  SUITE 4 – Storage Module (storage.js)
+            // ================================================================
+
+            describe('Storage – Load & Save Records', function () {
+                it('loadRecords returns empty array when nothing stored', function () {
+                    clearStorage();
+                    const records = window.FinTrackStorage.loadRecords();
+                    assert(Array.isArray(records), 'Should return array');
+                    assertEqual(records.length, 0);
+                });
+
+                it('saveRecords persists and loadRecords retrieves', function () {
+                    clearStorage();
+                    const data = [{ id: 'txn_test1', description: 'Test', amount: 10, category: 'Food', date: '2025-01-01', createdAt: '', updatedAt: '' }];
+                    window.FinTrackStorage.saveRecords(data);
+                    const loaded = window.FinTrackStorage.loadRecords();
+                    assertEqual(loaded.length, 1);
+                    assertEqual(loaded[0].id, 'txn_test1');
+                    clearStorage();
+                });
+            });
+
+            describe('Storage – Settings', function () {
+                it('loadSettings returns defaults when nothing stored', function () {
+                    clearStorage();
+                    const settings = window.FinTrackStorage.loadSettings();
+                    assertEqual(settings.baseCurrency, 'ZAR');
+                    assertEqual(settings.budgetCap, 0);
+                    assert('rates' in settings, 'Should have rates');
+                });
+
+                it('saveSettings persists and loadSettings retrieves', function () {
+                    clearStorage();
+                    const custom = { baseCurrency: 'USD', rates: { USD: 1, EUR: 0.92 }, budgetCap: 5000 };
+                    window.FinTrackStorage.saveSettings(custom);
+                    const loaded = window.FinTrackStorage.loadSettings();
+                    assertEqual(loaded.baseCurrency, 'USD');
+                    assertEqual(loaded.budgetCap, 5000);
+                    clearStorage();
+                });
+
+                it('getDefaultSettings returns correct structure', function () {
+                    const defaults = window.FinTrackStorage.getDefaultSettings();
+                    assertEqual(defaults.baseCurrency, 'ZAR');
+                    assertEqual(defaults.rates.USD, 0.055);
+                    assertEqual(defaults.rates.EUR, 0.051);
+                    assertEqual(defaults.budgetCap, 0);
+                });
+            });
+
+            describe('Storage – Import Validation', function () {
+                it('rejects non-array input', function () {
+                    const r = window.FinTrackStorage.validateImportData('not an array');
+                    assert(!r.valid);
+                    assert(r.message.includes('array'), 'Message should mention array');
+                });
+
+                it('rejects object instead of array', function () {
+                    const r = window.FinTrackStorage.validateImportData({ foo: 'bar' });
+                    assert(!r.valid);
+                });
+
+                it('rejects record missing required field', function () {
+                    const incomplete = [{ id: 'txn_1', description: 'Test' }]; // missing amount, category, date, timestamps
+                    const r = window.FinTrackStorage.validateImportData(incomplete);
+                    assert(!r.valid);
+                    assert(r.message.includes('missing'), 'Should mention missing field');
+                });
+
+                it('rejects record with negative amount', function () {
+                    const bad = [{
+                        id: 'txn_1', description: 'Bad', amount: -5,
+                        category: 'Food', date: '2025-01-01',
+                        createdAt: '', updatedAt: ''
+                    }];
+                    const r = window.FinTrackStorage.validateImportData(bad);
+                    assert(!r.valid, 'Negative amount should fail');
+                });
+
+                it('rejects record with string amount', function () {
+                    const bad = [{
+                        id: 'txn_1', description: 'Bad', amount: 'ten',
+                        category: 'Food', date: '2025-01-01',
+                        createdAt: '', updatedAt: ''
+                    }];
+                    const r = window.FinTrackStorage.validateImportData(bad);
+                    assert(!r.valid, 'String amount should fail');
+                });
+
+                it('accepts valid import data', function () {
+                    const good = [{
+                        id: 'txn_1', description: 'Valid', amount: 20,
+                        category: 'Books', date: '2025-02-14',
+                        createdAt: '2025-02-14T00:00:00.000Z',
+                        updatedAt: '2025-02-14T00:00:00.000Z'
+                    }];
+                    const r = window.FinTrackStorage.validateImportData(good);
+                    assert(r.valid, 'Should be valid');
+                    assertEqual(r.data.length, 1);
+                });
+
+                it('accepts empty array as valid import', function () {
+                    const r = window.FinTrackStorage.validateImportData([]);
+                    assert(r.valid, 'Empty array should be valid');
+                });
+            });
+
+            // ================================================================
+            //  SUITE 5 – State Management (state.js)
+            // ================================================================
+
+            describe('AppState – Add, Get, Update, Delete', function () {
+                it('init loads records from storage', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    assert(Array.isArray(window.AppState.records), 'records should be array');
+                });
+
+                it('addRecord creates a record with correct fields', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const rec = window.AppState.addRecord({
+                        description: 'Test expense',
+                        amount: '25.50',
+                        category: 'Food',
+                        date: '2025-06-15'
+                    });
+                    assert(rec.id.startsWith('txn_'), 'ID should start with txn_');
+                    assertEqual(rec.description, 'Test expense');
+                    assertEqual(rec.amount, 25.5);
+                    assertEqual(rec.category, 'Food');
+                    assertEqual(rec.date, '2025-06-15');
+                    assert(rec.createdAt !== undefined, 'Should have createdAt');
+                    assert(rec.updatedAt !== undefined, 'Should have updatedAt');
+                    clearStorage();
+                });
+
+                it('getRecord retrieves record by ID', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const added = window.AppState.addRecord({
+                        description: 'Find me',
+                        amount: '10',
+                        category: 'Books',
+                        date: '2025-03-01'
+                    });
+                    const found = window.AppState.getRecord(added.id);
+                    assert(found !== null, 'Should find the record');
+                    assertEqual(found.description, 'Find me');
+                    clearStorage();
+                });
+
+                it('getRecord returns null for non-existent ID', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const found = window.AppState.getRecord('txn_doesnotexist');
+                    assertEqual(found, null);
+                    clearStorage();
+                });
+
+                it('updateRecord modifies fields and updates timestamp', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const rec = window.AppState.addRecord({
+                        description: 'Original',
+                        amount: '5',
+                        category: 'Other',
+                        date: '2025-01-01'
+                    });
+                    const originalUpdatedAt = rec.updatedAt;
+
+                    // Small delay to ensure timestamp difference
+                    const updated = window.AppState.updateRecord(rec.id, {
+                        description: 'Modified',
+                        amount: '15',
+                        category: 'Food',
+                        date: '2025-02-02'
+                    });
+                    assert(updated !== null, 'Should return updated record');
+                    assertEqual(updated.description, 'Modified');
+                    assertEqual(updated.amount, 15);
+                    assertEqual(updated.category, 'Food');
+                    assertEqual(updated.date, '2025-02-02');
+                    // createdAt should remain the same
+                    assertEqual(updated.createdAt, rec.createdAt);
+                    clearStorage();
+                });
+
+                it('updateRecord returns null for non-existent ID', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const result = window.AppState.updateRecord('txn_ghost', {
+                        description: 'X', amount: '1', category: 'Food', date: '2025-01-01'
+                    });
+                    assertEqual(result, null);
+                    clearStorage();
+                });
+
+                it('deleteRecord removes the record and returns true', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const rec = window.AppState.addRecord({
+                        description: 'Delete me',
+                        amount: '1',
+                        category: 'Other',
+                        date: '2025-05-05'
+                    });
+                    const deleted = window.AppState.deleteRecord(rec.id);
+                    assert(deleted === true, 'Should return true');
+                    assertEqual(window.AppState.getRecord(rec.id), null);
+                    clearStorage();
+                });
+
+                it('deleteRecord returns false for non-existent ID', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const deleted = window.AppState.deleteRecord('txn_nope');
+                    assert(deleted === false, 'Should return false');
+                    clearStorage();
+                });
+            });
+
+            describe('AppState – Sorting (getRecords)', function () {
+                // Seed three records with known data
+                function seedRecords() {
+                    clearStorage();
+                    window.AppState.init();
+                    window.AppState.addRecord({ description: 'Alpha', amount: '30', category: 'Food', date: '2025-03-01' });
+                    window.AppState.addRecord({ description: 'Charlie', amount: '10', category: 'Books', date: '2025-01-01' });
+                    window.AppState.addRecord({ description: 'Bravo', amount: '20', category: 'Transport', date: '2025-02-01' });
+                }
+
+                it('sorts by date descending (newest first)', function () {
+                    seedRecords();
+                    const recs = window.AppState.getRecords('date-desc');
+                    assertEqual(recs[0].date, '2025-03-01');
+                    assertEqual(recs[2].date, '2025-01-01');
+                    clearStorage();
+                });
+
+                it('sorts by date ascending (oldest first)', function () {
+                    seedRecords();
+                    const recs = window.AppState.getRecords('date-asc');
+                    assertEqual(recs[0].date, '2025-01-01');
+                    assertEqual(recs[2].date, '2025-03-01');
+                    clearStorage();
+                });
+
+                it('sorts by amount ascending', function () {
+                    seedRecords();
+                    const recs = window.AppState.getRecords('amount-asc');
+                    assertEqual(recs[0].amount, 10);
+                    assertEqual(recs[2].amount, 30);
+                    clearStorage();
+                });
+
+                it('sorts by amount descending', function () {
+                    seedRecords();
+                    const recs = window.AppState.getRecords('amount-desc');
+                    assertEqual(recs[0].amount, 30);
+                    assertEqual(recs[2].amount, 10);
+                    clearStorage();
+                });
+
+                it('sorts by description ascending (A→Z)', function () {
+                    seedRecords();
+                    const recs = window.AppState.getRecords('description-asc');
+                    assertEqual(recs[0].description, 'Alpha');
+                    assertEqual(recs[1].description, 'Bravo');
+                    assertEqual(recs[2].description, 'Charlie');
+                    clearStorage();
+                });
+
+                it('sorts by description descending (Z→A)', function () {
+                    seedRecords();
+                    const recs = window.AppState.getRecords('description-desc');
+                    assertEqual(recs[0].description, 'Charlie');
+                    assertEqual(recs[2].description, 'Alpha');
+                    clearStorage();
+                });
+            });
+
+            describe('AppState – Settings & Replace', function () {
+                it('updateSettings merges and persists', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    window.AppState.updateSettings({ budgetCap: 3000 });
+                    assertEqual(window.AppState.settings.budgetCap, 3000);
+                    // Verify persistence
+                    const loaded = window.FinTrackStorage.loadSettings();
+                    assertEqual(loaded.budgetCap, 3000);
+                    clearStorage();
+                });
+
+                it('replaceRecords overwrites all records', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    window.AppState.addRecord({ description: 'Old', amount: '1', category: 'Food', date: '2025-01-01' });
+                    const newData = [
+                        { id: 'txn_new1', description: 'New A', amount: 5, category: 'Other', date: '2025-06-01', createdAt: '', updatedAt: '' },
+                        { id: 'txn_new2', description: 'New B', amount: 10, category: 'Books', date: '2025-06-02', createdAt: '', updatedAt: '' }
+                    ];
+                    window.AppState.replaceRecords(newData);
+                    assertEqual(window.AppState.records.length, 2);
+                    assertEqual(window.AppState.records[0].id, 'txn_new1');
+                    clearStorage();
+                });
+            });
+
+            // ================================================================
+            //  SUITE 6 – Data Integrity & Edge Cases
+            // ================================================================
+
+            describe('Data Integrity & Edge Cases', function () {
+                it('records persist across state re-init', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    window.AppState.addRecord({ description: 'Persist', amount: '100', category: 'Fees', date: '2025-04-01' });
+                    // Re-init (simulating page reload)
+                    window.AppState.init();
+                    assert(window.AppState.records.length >= 1, 'Should have at least 1 record after re-init');
+                    const found = window.AppState.records.find(r => r.description === 'Persist');
+                    assert(found !== undefined, 'Record should survive re-init');
+                    clearStorage();
+                });
+
+                it('amount is stored as a number, not a string', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const rec = window.AppState.addRecord({
+                        description: 'Type check',
+                        amount: '42.50',
+                        category: 'Other',
+                        date: '2025-07-07'
+                    });
+                    assert(typeof rec.amount === 'number', 'Amount should be typeof number');
+                    assertEqual(rec.amount, 42.5);
+                    clearStorage();
+                });
+
+                it('description is trimmed on save', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const rec = window.AppState.addRecord({
+                        description: '  Spaces around  ',
+                        amount: '1',
+                        category: 'Other',
+                        date: '2025-08-08'
+                    });
+                    assertEqual(rec.description, 'Spaces around');
+                    clearStorage();
+                });
+
+                it('each new record gets a unique ID', function () {
+                    clearStorage();
+                    window.AppState.init();
+                    const r1 = window.AppState.addRecord({ description: 'A', amount: '1', category: 'Food', date: '2025-01-01' });
+                    // Busy-wait briefly so Date.now() returns a different ms
+                    const start = Date.now();
+                    while (Date.now() === start) { /* spin */ }
+                    const r2 = window.AppState.addRecord({ description: 'B', amount: '2', category: 'Food', date: '2025-01-02' });
+                    assert(r1.id !== r2.id, 'IDs should be unique');
+                    clearStorage();
+                });
+
+                it('validateImportData rejects null entries in array', function () {
+                    const bad = [null];
+                    const r = window.FinTrackStorage.validateImportData(bad);
+                    assert(!r.valid, 'null entry should fail validation');
+                });
+
+                it('validateImportData rejects numeric entries in array', function () {
+                    const bad = [42];
+                    const r = window.FinTrackStorage.validateImportData(bad);
+                    assert(!r.valid, 'numeric entry should fail validation');
+                });
+            });
+
+            // ================================================================
+            //  Render results to the page
+            // ================================================================
+
+            function renderResults() {
+                const container = document.getElementById('test-results');
+                const summary = document.getElementById('test-summary');
+                let totalPass = 0;
+                let totalFail = 0;
+                let html = '';
+
+                suites.forEach(suite => {
+                    totalPass += suite.pass;
+                    totalFail += suite.fail;
+
+                    const allPassed = suite.fail === 0;
+                    const badgeClass = allPassed ? 'test-suite__badge--pass' : 'test-suite__badge--fail';
+                    const badgeText = allPassed ? `✓ ${suite.pass} passed` : `✗ ${suite.fail} failed / ${suite.pass} passed`;
+
+                    html += `
+                        <div class="test-suite">
+                            <div class="test-suite__header" onclick="this.parentElement.querySelector('.test-suite__body').hidden = !this.parentElement.querySelector('.test-suite__body').hidden">
+                                <span class="test-suite__name">${suite.name}</span>
+                                <span class="test-suite__badge ${badgeClass}">${badgeText}</span>
+                            </div>
+                            <div class="test-suite__body" ${allPassed ? 'hidden' : ''}>
+                    `;
+
+                    suite.tests.forEach(t => {
+                        const cls = t.passed ? 'test-row--pass' : 'test-row--fail';
+                        const icon = t.passed ? '✅' : '❌';
+                        const errorInfo = t.error ? ` — <em>${t.error}</em>` : '';
+                        html += `
+                            <div class="test-row ${cls}">
+                                <span class="test-row__icon">${icon}</span>
+                                <span class="test-row__label">${t.label}${errorInfo}</span>
+                            </div>
+                        `;
+                    });
+
+                    html += '</div></div>';
+                });
+
+                container.innerHTML = html;
+
+                const total = totalPass + totalFail;
+                summary.innerHTML = `
+                    <span class="test-summary__item test-summary__item--total">Total: ${total}</span>
+                    <span class="test-summary__item test-summary__item--pass">✓ Passed: ${totalPass}</span>
+                    <span class="test-summary__item test-summary__item--fail">✗ Failed: ${totalFail}</span>
+                `;
+
+                // Log summary to console too
+                console.log(`\n🧪 FINTRACK TESTS: ${totalPass}/${total} passed, ${totalFail} failed\n`);
+            }
+
+            // Run!
+            renderResults();
+
+            // Clean up after all tests
+            clearStorage();
+
+        })();
+    </script>
+
+</body>
+
+</html>
