@@ -74,6 +74,7 @@
     if (pageName === 'dashboard') renderDashboard();
     if (pageName === 'settings') loadSettingsToForm();
     if (pageName === 'market') window.FinTrackScraper.init();
+    if (pageName === 'tools') { /* Tools init if needed */ }
     if (pageName === 'add' && !window.AppState.editingId) resetForm();
   }
 
@@ -690,6 +691,7 @@
 
   function init() {
     window.AppState.init();
+    window.FinTrackM5.init();
     handleResize();
     bindEvents();
     navigateTo('about');

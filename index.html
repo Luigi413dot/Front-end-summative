@@ -68,10 +68,34 @@
                             Market
                         </button>
                     </li>
+                    <li class="app-nav__item">
+                        <button class="app-nav__link" data-page="tools" id="nav-tools">
+                            <span class="nav-icon" aria-hidden="true">🛠️</span>
+                            Tools
+                        </button>
+                    </li>
                 </ul>
             </nav>
 
             <div class="app-header__actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
                 <button class="hamburger-btn" id="hamburger-btn" aria-expanded="false" aria-controls="main-nav"
                     aria-label="Toggle navigation menu">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -124,22 +148,22 @@
 
                 <!-- Stats Cards -->
                 <div class="grid-stats" id="stats-grid">
-                    <div class="card card--stat">
+                    <div class="card card--stat glass">
                         <div class="card__icon card__icon--accent" aria-hidden="true">📝</div>
                         <div class="card__value" id="stat-total-records">0</div>
                         <div class="card__label">Total Records</div>
                     </div>
-                    <div class="card card--stat">
+                    <div class="card card--stat glass">
                         <div class="card__icon card__icon--success" aria-hidden="true">💰</div>
                         <div class="card__value" id="stat-total-spent">R0.00</div>
                         <div class="card__label">Total Spent</div>
                     </div>
-                    <div class="card card--stat">
+                    <div class="card card--stat glass">
                         <div class="card__icon card__icon--warning" aria-hidden="true">🏷️</div>
                         <div class="card__value" id="stat-top-category">—</div>
                         <div class="card__label">Top Category</div>
                     </div>
-                    <div class="card card--stat">
+                    <div class="card card--stat glass">
                         <div class="card__icon card__icon--info" aria-hidden="true">📅</div>
                         <div class="card__value" id="stat-avg-transaction">R0.00</div>
                         <div class="card__label">Avg Transaction</div>
@@ -147,7 +171,7 @@
                 </div>
 
                 <!-- 7-Day Trend Chart -->
-                <div class="card" style="margin-top: var(--sp-6);">
+                <div class="card glass" style="margin-top: var(--sp-6);">
                     <h3 style="margin-bottom: var(--sp-4);">Last 7 Days Spending</h3>
                     <div class="chart-bar" id="chart-7day" role="img"
                         aria-label="Bar chart showing spending over the last 7 days">
@@ -186,7 +210,7 @@
                 <div class="grid-stats"
                     style="margin-top: var(--sp-6); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                     <!-- Category Distribution (Milestone 4) -->
-                    <div class="card">
+                    <div class="card glass">
                         <h3 style="margin-bottom: var(--sp-4);">Category Distribution</h3>
                         <div style="display: flex; align-items: center; gap: var(--sp-6); flex-wrap: wrap;">
                             <div id="category-pie" class="pie-chart" role="img"
@@ -198,7 +222,7 @@
                     </div>
 
                     <!-- Budget Cap -->
-                    <div class="card">
+                    <div class="card glass">
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-3);">
                             <h3>Budget Cap</h3>
@@ -496,6 +520,70 @@
                 </div>
             </section>
 
+            <!-- ======== TOOLS SECTION (Milestone 5 - Calculators & Games) ======== -->
+            <section id="page-tools" class="page-section" aria-labelledby="tools-heading">
+                <div class="page-section__header">
+                    <h1 id="tools-heading" class="page-section__title">Financial Tools</h1>
+                    <p class="page-section__subtitle">Calculators and games to boost your financial literacy.</p>
+                </div>
+
+                <div class="grid-stats" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+                    <!-- Interest Calculator -->
+                    <div class="card glass">
+                        <h3 style="margin-bottom: var(--sp-2);">💰 Compound Interest Calculator</h3>
+                        <p style="font-size: var(--fs-xs); margin-bottom: var(--sp-4);">See how your savings grow over
+                            time.</p>
+                        <div class="form-group">
+                            <label class="form-label" for="calc-principal">Principal (R)</label>
+                            <input type="number" id="calc-principal" class="form-input" placeholder="1000" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="calc-rate">Annual Interest Rate (%)</label>
+                            <input type="number" id="calc-rate" class="form-input" placeholder="5" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="calc-years">Years</label>
+                            <input type="number" id="calc-years" class="form-input" placeholder="5" />
+                        </div>
+                        <button class="btn btn--primary" id="btn-calc-interest">Calculate Growth</button>
+                        <div id="calc-result" class="animate-fade-in"
+                            style="margin-top: var(--sp-4); font-weight: var(--fw-bold); font-size: var(--fs-lg); display: none;">
+                            Future Value: <span id="calc-result-value"></span>
+                        </div>
+                    </div>
+
+                    <!-- Budget Guessing Game -->
+                    <div class="card glass">
+                        <h3 style="margin-bottom: var(--sp-2);">🎮 The Budgeting Game</h3>
+                        <p style="font-size: var(--fs-xs); margin-bottom: var(--sp-4);">Test your memory or your
+                            financial intuition!</p>
+                        <div id="game-container">
+                            <div id="game-intro">
+                                <p style="font-size: var(--fs-sm); margin-bottom: var(--sp-4);">How well do you know
+                                    your spending? Guess the total amount spent in a random category!</p>
+                                <button class="btn btn--primary btn--pulse" id="btn-start-game">Start Challenge</button>
+                            </div>
+                            <div id="game-play" style="display: none;">
+                                <p id="game-question"
+                                    style="font-weight: var(--fw-semibold); margin-bottom: var(--sp-3);">
+                                </p>
+                                <div class="form-group">
+                                    <input type="number" id="game-guess" class="form-input"
+                                        placeholder="Enter guess..." />
+                                </div>
+                                <button class="btn btn--primary" id="btn-submit-guess">Submit Guess</button>
+                            </div>
+                            <div id="game-feedback" class="animate-fade-in"
+                                style="margin-top: var(--sp-4); display: none;">
+                                <p id="game-feedback-text"></p>
+                                <button class="btn btn--secondary btn--sm" id="btn-play-again"
+                                    style="margin-top: var(--sp-2);">Play Again</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <!-- ============ FOOTER ============ -->
@@ -534,6 +622,7 @@
     <script src="scripts/validators.js"></script>
     <script src="scripts/state.js"></script>
     <script src="scripts/scraping.js"></script>
+    <script src="scripts/milestone5.js"></script>
     <script src="scripts/app.js"></script>
 </body>
 
