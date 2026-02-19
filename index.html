@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="styles/main.css" />
     <link rel="stylesheet" href="styles/layout.css" />
     <link rel="stylesheet" href="styles/components.css" />
+    <!-- jQuery for Milestone 4 Scraping -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -58,6 +60,12 @@
                         <button class="app-nav__link" data-page="settings" id="nav-settings">
                             <span class="nav-icon" aria-hidden="true">⚙️</span>
                             Settings
+                        </button>
+                    </li>
+                    <li class="app-nav__item">
+                        <button class="app-nav__link" data-page="market" id="nav-market">
+                            <span class="nav-icon" aria-hidden="true">📈</span>
+                            Market
                         </button>
                     </li>
                 </ul>
@@ -175,21 +183,36 @@
                     </div>
                 </div>
 
-                <!-- Budget Cap -->
-                <div class="card" style="margin-top: var(--sp-4);">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-3);">
-                        <h3>Budget Cap</h3>
-                        <span id="budget-fraction"
-                            style="font-size: var(--fs-sm); color: var(--color-text-tertiary);">R0 / R0</span>
+                <div class="grid-stats"
+                    style="margin-top: var(--sp-6); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <!-- Category Distribution (Milestone 4) -->
+                    <div class="card">
+                        <h3 style="margin-bottom: var(--sp-4);">Category Distribution</h3>
+                        <div style="display: flex; align-items: center; gap: var(--sp-6); flex-wrap: wrap;">
+                            <div id="category-pie" class="pie-chart" role="img"
+                                aria-label="Pie chart showing category distribution"></div>
+                            <ul id="category-legend" class="chart-legend" aria-hidden="true">
+                                <!-- Populated by JS -->
+                            </ul>
+                        </div>
                     </div>
-                    <div class="progress">
-                        <div class="progress__fill" id="budget-progress" style="width: 0%;" role="progressbar"
-                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <div aria-live="polite" id="budget-status"
-                        style="margin-top: var(--sp-2); font-size: var(--fs-sm); color: var(--color-text-tertiary);">
-                        Set a budget cap in Settings to track your spending.
+
+                    <!-- Budget Cap -->
+                    <div class="card">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-3);">
+                            <h3>Budget Cap</h3>
+                            <span id="budget-fraction"
+                                style="font-size: var(--fs-sm); color: var(--color-text-tertiary);">R0 / R0</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress__fill" id="budget-progress" style="width: 0%;" role="progressbar"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div aria-live="polite" id="budget-status"
+                            style="margin-top: var(--sp-2); font-size: var(--fs-sm); color: var(--color-text-tertiary);">
+                            Set a budget cap in Settings to track your spending.
+                        </div>
                     </div>
                 </div>
             </section>
@@ -441,6 +464,38 @@
                 </div>
             </section>
 
+            <!-- ======== MARKET SECTION (Milestone 4 - Scraping) ======== -->
+            <section id="page-market" class="page-section" aria-labelledby="market-heading">
+                <div class="page-section__header">
+                    <h1 id="market-heading" class="page-section__title">Market Trends</h1>
+                    <p class="page-section__subtitle">Live financial insights and news (Scraped data).</p>
+                </div>
+
+                <div class="card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4);">
+                        <h3>Latest Financial News</h3>
+                        <button class="btn btn--secondary btn--sm" id="btn-refresh-market">🔄 Refresh</button>
+                    </div>
+                    <div id="market-news-container" class="market-news-list">
+                        <div class="empty-state">
+                            <p>Loading scraped market data...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-stats" style="margin-top: var(--sp-6);">
+                    <div class="card card--stat">
+                        <div class="card__label">BTC / USD</div>
+                        <div class="card__value" id="market-btc-price">Loading...</div>
+                    </div>
+                    <div class="card card--stat">
+                        <div class="card__label">ETH / USD</div>
+                        <div class="card__value" id="market-eth-price">Loading...</div>
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <!-- ============ FOOTER ============ -->
@@ -478,6 +533,7 @@
     <script src="scripts/storage.js"></script>
     <script src="scripts/validators.js"></script>
     <script src="scripts/state.js"></script>
+    <script src="scripts/scraping.js"></script>
     <script src="scripts/app.js"></script>
 </body>
 

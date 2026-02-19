@@ -73,6 +73,7 @@
     if (pageName === 'records') renderRecords();
     if (pageName === 'dashboard') renderDashboard();
     if (pageName === 'settings') loadSettingsToForm();
+    if (pageName === 'market') window.FinTrackScraper.init();
     if (pageName === 'add' && !window.AppState.editingId) resetForm();
   }
 
@@ -317,9 +318,57 @@
 
     // 7-day chart
     renderChart(records);
+    renderCategoryPie(records);
 
     // Budget cap
     renderBudget(totalSpent, settings);
+  }
+
+  /**
+   * Simple Category Distribution visualization (Milestone 4)
+   * Using a conic-gradient for a simple pie chart effect
+   */
+  function renderCategoryPie(records) {
+    const pieContainer = document.getElementById('category-pie');
+    const legendContainer = document.getElementById('category-legend');
+    if (!pieContainer || !legendContainer) return;
+
+    if (records.length === 0) {
+      pieContainer.style.background = 'var(--color-bg-tertiary)';
+      legendContainer.innerHTML = '<li>No data</li>';
+      return;
+    }
+
+    const totals = {};
+    let totalAll = 0;
+    records.forEach(r => {
+      totals[r.category] = (totals[r.category] || 0) + r.amount;
+      totalAll += r.amount;
+    });
+
+    const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
+    let currentDegree = 0;
+    const gradientParts = [];
+    legendContainer.innerHTML = '';
+
+    Object.entries(totals).forEach(([cat, amt], i) => {
+      const pct = (amt / totalAll) * 100;
+      const deg = (pct / 100) * 360;
+      const color = colors[i % colors.length];
+
+      gradientParts.push(`${color} ${currentDegree}deg ${(currentDegree + deg)}deg`);
+      currentDegree += deg;
+
+      const li = document.createElement('li');
+      li.style.display = 'flex';
+      li.style.alignItems = 'center';
+      li.style.gap = '8px'; // var(--sp-2)
+      li.style.fontSize = '12px'; // var(--fs-xs)
+      li.innerHTML = `<span style="width:10px;height:10px;background:${color};border-radius:2px;"></span> ${cat} (${Math.round(pct)}%)`;
+      legendContainer.appendChild(li);
+    });
+
+    pieContainer.style.background = `conic-gradient(${gradientParts.join(', ')})`;
   }
 
   function renderChart(records) {
