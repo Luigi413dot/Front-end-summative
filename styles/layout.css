@@ -1,0 +1,331 @@
+/* ============================================================
+   FINTRACK – LAYOUT SYSTEM
+   Mobile-first • Flexbox & Grid • 3 Breakpoints
+   ============================================================ */
+
+/* ---------- App Shell ---------- */
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    height: var(--header-height);
+    background: var(--color-bg-nav);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--color-border-default);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--sp-4);
+    transition: background var(--transition-base);
+}
+
+.app-header__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    text-decoration: none;
+}
+
+.app-header__logo {
+    width: 36px;
+    height: 36px;
+    background: var(--color-accent-gradient);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: var(--fw-bold);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.app-header__title {
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-extrabold);
+    background: var(--color-accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+}
+
+.app-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+}
+
+/* ---------- Hamburger (mobile) ---------- */
+.hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--color-text-primary);
+    transition: background var(--transition-fast);
+}
+
+.hamburger-btn:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.hamburger-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ---------- Navigation ---------- */
+.app-nav {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-overlay);
+    background: var(--color-bg-overlay);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+.app-nav[aria-hidden="false"],
+.app-nav.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.app-nav__list {
+    list-style: none;
+    background: var(--color-bg-secondary);
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    border-bottom: 1px solid var(--color-border-default);
+    box-shadow: var(--shadow-lg);
+    animation: slideInUp 300ms ease both;
+}
+
+.app-nav__item {
+    list-style: none;
+}
+
+.app-nav__link {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-base);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+
+.app-nav__link:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+
+.app-nav__link.is-active {
+    background: var(--color-accent-primary-light);
+    color: var(--color-accent-primary);
+    font-weight: var(--fw-semibold);
+}
+
+.app-nav__link svg,
+.app-nav__link .nav-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.app-nav__link.is-active svg,
+.app-nav__link.is-active .nav-icon {
+    opacity: 1;
+}
+
+/* ---------- Main Content ---------- */
+.app-main {
+    flex: 1;
+    padding: var(--sp-4);
+    max-width: var(--max-content-width);
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* ---------- Page Sections ---------- */
+.page-section {
+    display: none;
+    animation: fadeIn var(--transition-slow) both;
+}
+
+.page-section.is-active {
+    display: block;
+}
+
+.page-section__header {
+    margin-bottom: var(--sp-6);
+}
+
+.page-section__title {
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-extrabold);
+    letter-spacing: -0.5px;
+    margin-bottom: var(--sp-2);
+}
+
+.page-section__subtitle {
+    font-size: var(--fs-base);
+    color: var(--color-text-tertiary);
+}
+
+/* ---------- Footer ---------- */
+.app-footer {
+    padding: var(--sp-6) var(--sp-4);
+    text-align: center;
+    border-top: 1px solid var(--color-border-default);
+    color: var(--color-text-tertiary);
+    font-size: var(--fs-sm);
+    background: var(--color-bg-secondary);
+}
+
+.app-footer a {
+    color: var(--color-accent-primary);
+}
+
+/* ---------- Grid Utilities ---------- */
+.grid-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+}
+
+/* ============================================================
+   TABLET BREAKPOINT (≥ 768px)
+   ============================================================ */
+@media (min-width: 768px) {
+    .app-header {
+        padding: 0 var(--sp-6);
+    }
+
+    .hamburger-btn {
+        display: none;
+    }
+
+    .app-nav {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        background: none;
+    }
+
+    .app-nav__list {
+        flex-direction: row;
+        background: none;
+        padding: 0;
+        border-bottom: none;
+        box-shadow: none;
+        gap: var(--sp-1);
+        animation: none;
+    }
+
+    .app-nav__link {
+        padding: var(--sp-2) var(--sp-3);
+        font-size: var(--fs-sm);
+        border-radius: var(--radius-sm);
+    }
+
+    .app-main {
+        padding: var(--sp-6);
+    }
+
+    .grid-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================================
+   DESKTOP BREAKPOINT (≥ 1024px)
+   ============================================================ */
+@media (min-width: 1024px) {
+    .app-header {
+        padding: 0 var(--sp-8);
+    }
+
+    .app-nav__link {
+        padding: var(--sp-2) var(--sp-4);
+        font-size: var(--fs-base);
+    }
+
+    .app-main {
+        padding: var(--sp-8);
+    }
+
+    .page-section__title {
+        font-size: var(--fs-3xl);
+    }
+
+    .grid-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ============================================================
+   LARGE DESKTOP (≥ 1280px)
+   ============================================================ */
+@media (min-width: 1280px) {
+    .app-main {
+        padding: var(--sp-10) var(--sp-8);
+    }
+}

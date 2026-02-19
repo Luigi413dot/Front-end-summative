@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="FinTrack – A responsive student finance tracker to manage budgets, transactions, and spending habits." />
+    <title>FinTrack – Student Finance Tracker</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+
+        <!-- ============ SKIP LINK (a11y) ============ -->
+        <a href="#main-content" class="skip-link">Skip to content</a>
+
+        <!-- ============ HEADER ============ -->
+        <header class="app-header" role="banner">
+            <a href="#" class="app-header__brand" aria-label="FinTrack Home">
+                <span class="app-header__logo" aria-hidden="true">₿</span>
+                <span class="app-header__title">FinTrack</span>
+            </a>
+
+            <!-- Desktop Nav (hidden on mobile, shown via CSS) -->
+            <nav class="app-nav" id="main-nav" role="navigation" aria-label="Main navigation" aria-hidden="true">
+                <ul class="app-nav__list">
+                    <li class="app-nav__item">
+                        <button class="app-nav__link is-active" data-page="about" aria-current="page" id="nav-about">
+                            <span class="nav-icon" aria-hidden="true">ℹ️</span>
+                            About
+                        </button>
+                    </li>
+                    <li class="app-nav__item">
+                        <button class="app-nav__link" data-page="dashboard" id="nav-dashboard">
+                            <span class="nav-icon" aria-hidden="true">📊</span>
+                            Dashboard
+                        </button>
+                    </li>
+                    <li class="app-nav__item">
+                        <button class="app-nav__link" data-page="records" id="nav-records">
+                            <span class="nav-icon" aria-hidden="true">📋</span>
+                            Records
+                        </button>
+                    </li>
+                    <li class="app-nav__item">
+                        <button class="app-nav__link" data-page="add" id="nav-add">
+                            <span class="nav-icon" aria-hidden="true">➕</span>
+                            Add
+                        </button>
+                    </li>
+                    <li class="app-nav__item">
+                        <button class="app-nav__link" data-page="settings" id="nav-settings">
+                            <span class="nav-icon" aria-hidden="true">⚙️</span>
+                            Settings
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="app-header__actions">
+                <button class="hamburger-btn" id="hamburger-btn" aria-expanded="false" aria-controls="main-nav"
+                    aria-label="Toggle navigation menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- ============ MAIN CONTENT ============ -->
+        <main id="main-content" class="app-main" role="main">
+
+            <!-- ======== ABOUT SECTION ======== -->
+            <section id="page-about" class="page-section is-active" aria-labelledby="about-heading">
+                <div class="about-hero">
+                    <h1 id="about-heading" class="about-hero__title">Welcome to FinTrack</h1>
+                    <p class="about-hero__text">
+                        Your personal student finance companion. Track every transaction, set budget goals,
+                        and take control of your spending — all in one beautiful, accessible app.
+                    </p>
+                </div>
+
+                <div class="page-section__header">
+                    <h2>Get in Touch</h2>
+                    <p class="page-section__subtitle">Find the project source code and reach out below.</p>
+                </div>
+
+                <div class="about-contact">
+                    <a href="https://github.com" class="about-contact__item" target="_blank" rel="noopener noreferrer"
+                        id="contact-github">
+                        <span aria-hidden="true">🔗</span>
+                        <span>GitHub Repository</span>
+                    </a>
+                    <a href="mailto:student@email.com" class="about-contact__item" id="contact-email">
+                        <span aria-hidden="true">📧</span>
+                        <span>student@email.com</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- ======== DASHBOARD SECTION ======== -->
+            <section id="page-dashboard" class="page-section" aria-labelledby="dashboard-heading">
+                <div class="page-section__header">
+                    <h1 id="dashboard-heading" class="page-section__title">Dashboard</h1>
+                    <p class="page-section__subtitle">Your financial overview at a glance.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid-stats" id="stats-grid">
+                    <div class="card card--stat">
+                        <div class="card__icon card__icon--accent" aria-hidden="true">📝</div>
+                        <div class="card__value" id="stat-total-records">0</div>
+                        <div class="card__label">Total Records</div>
+                    </div>
+                    <div class="card card--stat">
+                        <div class="card__icon card__icon--success" aria-hidden="true">💰</div>
+                        <div class="card__value" id="stat-total-spent">R0.00</div>
+                        <div class="card__label">Total Spent</div>
+                    </div>
+                    <div class="card card--stat">
+                        <div class="card__icon card__icon--warning" aria-hidden="true">🏷️</div>
+                        <div class="card__value" id="stat-top-category">—</div>
+                        <div class="card__label">Top Category</div>
+                    </div>
+                    <div class="card card--stat">
+                        <div class="card__icon card__icon--info" aria-hidden="true">📅</div>
+                        <div class="card__value" id="stat-avg-transaction">R0.00</div>
+                        <div class="card__label">Avg Transaction</div>
+                    </div>
+                </div>
+
+                <!-- 7-Day Trend Chart -->
+                <div class="card" style="margin-top: var(--sp-6);">
+                    <h3 style="margin-bottom: var(--sp-4);">Last 7 Days Spending</h3>
+                    <div class="chart-bar" id="chart-7day" role="img"
+                        aria-label="Bar chart showing spending over the last 7 days">
+                        <!-- Bars populated by JS -->
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill" style="height: 0%" aria-hidden="true"></div>
+                            <span class="chart-bar__label">Mon</span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill" style="height: 0%" aria-hidden="true"></div>
+                            <span class="chart-bar__label">Tue</span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill" style="height: 0%" aria-hidden="true"></div>
+                            <span class="chart-bar__label">Wed</span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill" style="height: 0%" aria-hidden="true"></div>
+                            <span class="chart-bar__label">Thu</span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill" style="height: 0%" aria-hidden="true"></div>
+                            <span class="chart-bar__label">Fri</span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill" style="height: 0%" aria-hidden="true"></div>
+                            <span class="chart-bar__label">Sat</span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill" style="height: 0%" aria-hidden="true"></div>
+                            <span class="chart-bar__label">Sun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget Cap -->
+                <div class="card" style="margin-top: var(--sp-4);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-3);">
+                        <h3>Budget Cap</h3>
+                        <span id="budget-fraction"
+                            style="font-size: var(--fs-sm); color: var(--color-text-tertiary);">R0 / R0</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress__fill" id="budget-progress" style="width: 0%;" role="progressbar"
+                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div aria-live="polite" id="budget-status"
+                        style="margin-top: var(--sp-2); font-size: var(--fs-sm); color: var(--color-text-tertiary);">
+                        Set a budget cap in Settings to track your spending.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======== RECORDS SECTION ======== -->
+            <section id="page-records" class="page-section" aria-labelledby="records-heading">
+                <div class="page-section__header">
+                    <h1 id="records-heading" class="page-section__title">Records</h1>
+                    <p class="page-section__subtitle">All your transactions in one place.</p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <div class="search-bar__input-group">
+                        <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="search" class="search-bar__input" id="search-input"
+                            placeholder="Search with regex... e.g. /(coffee|tea)/i"
+                            aria-label="Search transactions using regex patterns" />
+                    </div>
+                    <div class="search-bar__controls">
+                        <label class="form-check" id="case-toggle-label">
+                            <input type="checkbox" id="search-case-toggle" />
+                            <span class="form-check__label">Case-insensitive</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="toolbar__row">
+                        <label for="sort-select" class="sr-only">Sort records by</label>
+                        <select class="form-select" id="sort-select" style="max-width: 200px;">
+                            <option value="date-desc">Date (Newest)</option>
+                            <option value="date-asc">Date (Oldest)</option>
+                            <option value="description-asc">Description (A→Z)</option>
+                            <option value="description-desc">Description (Z→A)</option>
+                            <option value="amount-asc">Amount (Low→High)</option>
+                            <option value="amount-desc">Amount (High→Low)</option>
+                        </select>
+                        <span class="toolbar__spacer"></span>
+                        <span id="records-count" aria-live="polite"
+                            style="font-size: var(--fs-sm); color: var(--color-text-tertiary);">
+                            0 records
+                        </span>
+                        <button class="btn btn--primary" id="btn-add-new" aria-label="Add new transaction">
+                            <span aria-hidden="true">+</span> Add New
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table View (desktop) -->
+                <div class="data-table-wrapper" id="records-table-wrapper">
+                    <table class="data-table" id="records-table" aria-label="Transaction Records">
+                        <caption class="sr-only">List of all financial transactions with sortable columns</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col" aria-sort="none" data-sort="description" id="th-description">Description
+                                </th>
+                                <th scope="col" aria-sort="none" data-sort="amount" id="th-amount">Amount</th>
+                                <th scope="col" id="th-category">Category</th>
+                                <th scope="col" aria-sort="descending" data-sort="date" id="th-date">Date</th>
+                                <th scope="col" id="th-actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-tbody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Card View (mobile) -->
+                <div class="record-cards" id="records-cards" role="list" aria-label="Transaction records">
+                    <!-- Populated by JavaScript -->
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state hidden" id="records-empty">
+                    <div class="empty-state__icon">💳</div>
+                    <h3 class="empty-state__title">No transactions yet</h3>
+                    <p class="empty-state__text">Start tracking your spending by adding your first transaction.</p>
+                    <button class="btn btn--primary" id="btn-add-first" aria-label="Add your first transaction">
+                        <span aria-hidden="true">+</span> Add Transaction
+                    </button>
+                </div>
+            </section>
+
+            <!-- ======== ADD / EDIT FORM SECTION ======== -->
+            <section id="page-add" class="page-section" aria-labelledby="form-heading">
+                <div class="page-section__header">
+                    <h1 id="form-heading" class="page-section__title">Add Transaction</h1>
+                    <p class="page-section__subtitle">Fill in the details below to log a new transaction.</p>
+                </div>
+
+                <div class="card" style="max-width: 600px;">
+                    <form id="transaction-form" novalidate>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label for="txn-description" class="form-label form-label--required">Description</label>
+                            <input type="text" class="form-input" id="txn-description" name="description"
+                                placeholder="e.g., Lunch at cafeteria" aria-describedby="desc-error"
+                                aria-invalid="false" aria-required="true" required autocomplete="off" />
+                            <span id="desc-error" class="form-error" role="alert" hidden>
+                                ⚠ Description cannot have leading/trailing spaces or double spaces.
+                            </span>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="form-group">
+                            <label for="txn-amount" class="form-label form-label--required">Amount (R)</label>
+                            <input type="text" class="form-input" id="txn-amount" name="amount"
+                                placeholder="e.g., 12.50" inputmode="decimal" aria-describedby="amount-error"
+                                aria-invalid="false" aria-required="true" required />
+                            <span id="amount-error" class="form-error" role="alert" hidden>
+                                ⚠ Enter a valid amount (e.g., 0, 12, 12.50).
+                            </span>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="form-group">
+                            <label for="txn-category" class="form-label form-label--required">Category</label>
+                            <select class="form-select" id="txn-category" name="category"
+                                aria-describedby="category-error" aria-invalid="false" aria-required="true" required>
+                                <option value="">— Select Category —</option>
+                                <option value="Food">Food</option>
+                                <option value="Books">Books</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Fees">Fees</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <span id="category-error" class="form-error" role="alert" hidden>
+                                ⚠ Please select a valid category.
+                            </span>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="form-group">
+                            <label for="txn-date" class="form-label form-label--required">Date</label>
+                            <input type="date" class="form-input" id="txn-date" name="date"
+                                aria-describedby="date-error" aria-invalid="false" aria-required="true" required />
+                            <span id="date-error" class="form-error" role="alert" hidden>
+                                ⚠ Please enter a valid date (YYYY-MM-DD).
+                            </span>
+                        </div>
+
+                        <!-- Duplicate Word Warning -->
+                        <div id="duplicate-word-warning" class="form-error" role="alert" hidden
+                            style="margin-bottom: var(--sp-4);">
+                            ⚠ Description contains duplicate consecutive words (e.g., "the the").
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div style="display: flex; gap: var(--sp-3); margin-top: var(--sp-6);">
+                            <button type="submit" class="btn btn--primary" id="btn-save-txn">
+                                💾 Save Transaction
+                            </button>
+                            <button type="button" class="btn btn--secondary" id="btn-cancel-txn">
+                                Cancel
+                            </button>
+                        </div>
+
+                        <!-- Hidden field for edit mode -->
+                        <input type="hidden" id="txn-edit-id" name="editId" value="" />
+                    </form>
+                </div>
+            </section>
+
+            <!-- ======== SETTINGS SECTION ======== -->
+            <section id="page-settings" class="page-section" aria-labelledby="settings-heading">
+                <div class="page-section__header">
+                    <h1 id="settings-heading" class="page-section__title">Settings</h1>
+                    <p class="page-section__subtitle">Configure your preferences and manage data.</p>
+                </div>
+
+                <div style="max-width: 600px;">
+
+                    <!-- Currency Settings -->
+                    <div class="settings-group">
+                        <h2 class="settings-group__title">💱 Currency</h2>
+
+                        <div class="form-group">
+                            <label for="settings-currency" class="form-label">Base Currency</label>
+                            <select class="form-select" id="settings-currency">
+                                <option value="ZAR" selected>ZAR – South African Rand</option>
+                                <option value="USD">USD – US Dollar</option>
+                                <option value="EUR">EUR – Euro</option>
+                            </select>
+                        </div>
+
+                        <h3
+                            style="font-size: var(--fs-base); margin-bottom: var(--sp-3); color: var(--color-text-secondary);">
+                            Exchange Rates (Manual)</h3>
+
+                        <div class="settings-row">
+                            <span class="settings-row__label">1 ZAR =</span>
+                            <input type="text" class="form-input settings-row__input" id="rate-usd" placeholder="0.055"
+                                inputmode="decimal" aria-label="ZAR to USD exchange rate" />
+                            <span class="settings-row__label">USD</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="settings-row__label">1 ZAR =</span>
+                            <input type="text" class="form-input settings-row__input" id="rate-eur" placeholder="0.051"
+                                inputmode="decimal" aria-label="ZAR to EUR exchange rate" />
+                            <span class="settings-row__label">EUR</span>
+                        </div>
+                    </div>
+
+                    <!-- Budget Cap -->
+                    <div class="settings-group">
+                        <h2 class="settings-group__title">🎯 Budget</h2>
+                        <div class="form-group">
+                            <label for="settings-budget-cap" class="form-label">Monthly Budget Cap (R)</label>
+                            <input type="text" class="form-input" id="settings-budget-cap" placeholder="e.g., 2000"
+                                inputmode="decimal" aria-label="Monthly budget cap in Rands" />
+                            <span class="form-hint">Set to 0 or leave empty to disable the budget cap.</span>
+                        </div>
+                    </div>
+
+                    <!-- Data Management -->
+                    <div class="settings-group">
+                        <h2 class="settings-group__title">📦 Data Management</h2>
+                        <div style="display: flex; gap: var(--sp-3); flex-wrap: wrap;">
+                            <button class="btn btn--secondary" id="btn-export-json"
+                                aria-label="Export transactions as JSON file">
+                                📤 Export JSON
+                            </button>
+                            <button class="btn btn--secondary" id="btn-import-json"
+                                aria-label="Import transactions from JSON file">
+                                📥 Import JSON
+                            </button>
+                        </div>
+                        <input type="file" id="json-file-input" accept=".json" class="hidden"
+                            aria-label="Select JSON file to import" />
+                        <p class="form-hint" style="margin-top: var(--sp-2);">Export or import your transaction data as
+                            a JSON file.</p>
+                    </div>
+
+                    <!-- Save Button -->
+                    <button class="btn btn--primary" id="btn-save-settings" style="margin-top: var(--sp-4);"
+                        aria-label="Save all settings">
+                        💾 Save Settings
+                    </button>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ============ FOOTER ============ -->
+        <footer class="app-footer" role="contentinfo">
+            <p>© 2025 <strong>FinTrack</strong> — Built for WEB2 Summative Assignment</p>
+        </footer>
+
+        <!-- ============ DELETE CONFIRMATION MODAL ============ -->
+        <div class="modal-overlay" id="delete-modal" role="dialog" aria-labelledby="delete-modal-title"
+            aria-modal="true">
+            <div class="modal">
+                <div class="modal__header">
+                    <h2 id="delete-modal-title" class="modal__title">Confirm Delete</h2>
+                    <button class="btn btn--icon btn--ghost" id="delete-modal-close"
+                        aria-label="Close dialog">✕</button>
+                </div>
+                <p id="delete-modal-text" style="color: var(--color-text-secondary);">
+                    Are you sure you want to delete this transaction? This action cannot be undone.
+                </p>
+                <div class="modal__actions">
+                    <button class="btn btn--secondary" id="delete-modal-cancel">Cancel</button>
+                    <button class="btn btn--danger" id="delete-modal-confirm">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TOAST CONTAINER ============ -->
+        <div class="toast-container" id="toast-container" aria-live="polite" role="status">
+            <!-- Toasts appended by JS -->
+        </div>
+
+    </div>
+
+    <!-- ============ SCRIPTS ============ -->
+    <script src="scripts/app.js" type="module"></script>
+</body>
+
+</html>
