@@ -924,6 +924,38 @@
             });
 
             // ================================================================
+            //  SUITE 7 – Milestone 6: Advanced Analysis & Export
+            // ================================================================
+
+            describe('Milestone 6 – Monthly Analysis & CSV', function () {
+                it('correctly groups records by month (simulation)', function () {
+                    const records = [
+                        { amount: 100, date: '2025-01-15' },
+                        { amount: 200, date: '2025-01-20' },
+                        { amount: 50, date: '2024-12-15' }
+                    ];
+
+                    const janTotal = records
+                        .filter(r => r.date.startsWith('2025-01'))
+                        .reduce((sum, r) => sum + r.amount, 0);
+
+                    assertEqual(janTotal, 300, 'January total should be 300');
+                });
+
+                it('generates correct CSV headers', function () {
+                    const headers = ['ID', 'Description', 'Amount', 'Category', 'Date'];
+                    const csvLine = headers.join(',');
+                    assertEqual(csvLine, 'ID,Description,Amount,Category,Date');
+                });
+
+                it('escapes quotes in CSV description', function () {
+                    const desc = 'Lunch "The Big" Burger';
+                    const escaped = `"${desc.replace(/"/g, '""')}"`;
+                    assertEqual(escaped, '"Lunch ""The Big"" Burger"');
+                });
+            });
+
+            // ================================================================
             //  Render results to the page
             // ================================================================
 

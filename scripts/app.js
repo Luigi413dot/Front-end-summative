@@ -210,7 +210,7 @@
       const flags = caseToggle && caseToggle.checked ? 'gi' : 'g';
       searchRegex = window.FinTrackValidators.compileRegex(searchValue, flags);
       if (searchRegex) {
-        filteredRecords = records.filter(r =>
+        filteredRecords = filteredRecords.filter(r =>
           searchRegex.test(r.description) ||
           searchRegex.test(r.category) ||
           searchRegex.test(r.amount.toString()) ||
@@ -219,6 +219,12 @@
         // Reset lastIndex for global regex
         searchRegex.lastIndex = 0;
       }
+    }
+
+    // Apply category filter (Milestone 6)
+    const categoryFilter = window.FinTrackM6 ? window.FinTrackM6.getCategoryFilter() : 'all';
+    if (categoryFilter !== 'all') {
+      filteredRecords = filteredRecords.filter(r => r.category === categoryFilter);
     }
 
     // Update count
@@ -317,9 +323,10 @@
     const avgEl = document.getElementById('stat-avg-transaction');
     if (avgEl) avgEl.textContent = records.length > 0 ? formatCurrency(totalSpent / records.length) : formatCurrency(0);
 
-    // 7-day chart
+    // Charts
     renderChart(records);
     renderCategoryPie(records);
+    if (window.FinTrackM6) window.FinTrackM6.renderDashboard();
 
     // Budget cap
     renderBudget(totalSpent, settings);
@@ -692,11 +699,20 @@
   function init() {
     window.AppState.init();
     window.FinTrackM5.init();
+    if (window.FinTrackM6) window.FinTrackM6.init();
     handleResize();
     bindEvents();
     navigateTo('about');
     console.log('🏦 FinTrack initialized');
   }
+
+  // ──────────── Exports ────────────
+  window.FinTrackApp = {
+    renderRecords,
+    renderDashboard,
+    navigateTo,
+    showToast
+  };
 
   // Start app when DOM is ready
   if (document.readyState === 'loading') {

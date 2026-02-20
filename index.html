@@ -170,6 +170,33 @@
                     </div>
                 </div>
 
+                <!-- Monthly History (Milestone 6) -->
+                <div class="card glass" style="margin-top: var(--sp-6);">
+                    <h3 style="margin-bottom: var(--sp-4);">Monthly Spending History</h3>
+                    <div class="chart-bar" id="chart-monthly" role="img"
+                        aria-label="Bar chart showing spending over the last 6 months">
+                        <!-- Six months of bars -->
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill"></div><span class="chart-bar__label"></span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill"></div><span class="chart-bar__label"></span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill"></div><span class="chart-bar__label"></span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill"></div><span class="chart-bar__label"></span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill"></div><span class="chart-bar__label"></span>
+                        </div>
+                        <div class="chart-bar__col">
+                            <div class="chart-bar__fill"></div><span class="chart-bar__label"></span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 7-Day Trend Chart -->
                 <div class="card glass" style="margin-top: var(--sp-6);">
                     <h3 style="margin-bottom: var(--sp-4);">Last 7 Days Spending</h3>
@@ -227,7 +254,8 @@
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-3);">
                             <h3>Budget Cap</h3>
                             <span id="budget-fraction"
-                                style="font-size: var(--fs-sm); color: var(--color-text-tertiary);">R0 / R0</span>
+                                style="font-size: var(--fs-sm); color: var(--color-text-tertiary);">R0 /
+                                R0</span>
                         </div>
                         <div class="progress">
                             <div class="progress__fill" id="budget-progress" style="width: 0%;" role="progressbar"
@@ -261,6 +289,16 @@
                             aria-label="Search transactions using regex patterns" />
                     </div>
                     <div class="search-bar__controls">
+                        <select class="form-select" id="filter-category" style="max-width: 180px;"
+                            aria-label="Filter by category">
+                            <option value="all">All Categories</option>
+                            <option value="Food">Food</option>
+                            <option value="Books">Books</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Fees">Fees</option>
+                            <option value="Other">Other</option>
+                        </select>
                         <label class="form-check" id="case-toggle-label">
                             <input type="checkbox" id="search-case-toggle" />
                             <span class="form-check__label">Case-insensitive</span>
@@ -468,6 +506,10 @@
                                 aria-label="Export transactions as JSON file">
                                 📤 Export JSON
                             </button>
+                            <button class="btn btn--secondary" id="btn-export-csv"
+                                aria-label="Export transactions as CSV file">
+                                📄 Export CSV
+                            </button>
                             <button class="btn btn--secondary" id="btn-import-json"
                                 aria-label="Import transactions from JSON file">
                                 📥 Import JSON
@@ -623,6 +665,7 @@
     <script src="scripts/state.js"></script>
     <script src="scripts/scraping.js"></script>
     <script src="scripts/milestone5.js"></script>
+    <script src="scripts/milestone6.js"></script>
     <script src="scripts/app.js"></script>
 </body>
 
