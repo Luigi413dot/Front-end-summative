@@ -106,5 +106,95 @@
     "date": "2025-12-31",
     "createdAt": "2025-12-31T23:59:59.000Z",
     "updatedAt": "2025-12-31T23:59:59.000Z"
+  },
+  {
+    "id": "txn_0013",
+    "description": "New laptop",
+    "amount": 15000.00,
+    "category": "Other",
+    "date": "2026-01-10",
+    "createdAt": "2026-01-10T10:00:00.000Z",
+    "updatedAt": "2026-01-10T10:00:00.000Z"
+  },
+  {
+    "id": "txn_0014",
+    "description": "Physics lab fee",
+    "amount": 250.00,
+    "category": "Fees",
+    "date": "2026-01-15",
+    "createdAt": "2026-01-15T11:30:00.000Z",
+    "updatedAt": "2026-01-15T11:30:00.000Z"
+  },
+  {
+    "id": "txn_0015",
+    "description": "Pizza delivery",
+    "amount": 120.50,
+    "category": "Food",
+    "date": "2026-01-20",
+    "createdAt": "2026-01-20T19:45:00.000Z",
+    "updatedAt": "2026-01-20T19:45:00.000Z"
+  },
+  {
+    "id": "txn_0016",
+    "description": "Train ticket home",
+    "amount": 450.00,
+    "category": "Transport",
+    "date": "2026-01-22",
+    "createdAt": "2026-01-22T08:15:00.000Z",
+    "updatedAt": "2026-01-22T08:15:00.000Z"
+  },
+  {
+    "id": "txn_0017",
+    "description": "Concert tickets",
+    "amount": 350.00,
+    "category": "Entertainment",
+    "date": "2026-02-05",
+    "createdAt": "2026-02-05T20:00:00.000Z",
+    "updatedAt": "2026-02-05T20:00:00.000Z"
+  },
+  {
+    "id": "txn_0018",
+    "description": "Used history book",
+    "amount": 125.00,
+    "category": "Books",
+    "date": "2026-02-10",
+    "createdAt": "2026-02-10T14:20:00.000Z",
+    "updatedAt": "2026-02-10T14:20:00.000Z"
+  },
+  {
+    "id": "txn_0019",
+    "description": "Gym membership",
+    "amount": 199.99,
+    "category": "Other",
+    "date": "2026-02-01",
+    "createdAt": "2026-02-01T07:00:00.000Z",
+    "updatedAt": "2026-02-01T07:00:00.000Z"
+  },
+  {
+    "id": "txn_0020",
+    "description": "Library fine",
+    "amount": 15.00,
+    "category": "Fees",
+    "date": "2026-02-15",
+    "createdAt": "2026-02-15T16:10:00.000Z",
+    "updatedAt": "2026-02-15T16:10:00.000Z"
+  },
+  {
+    "id": "txn_0021",
+    "description": "Coffee beans",
+    "amount": 95.00,
+    "category": "Food",
+    "date": "2026-02-18",
+    "createdAt": "2026-02-18T09:30:00.000Z",
+    "updatedAt": "2026-02-18T09:30:00.000Z"
+  },
+  {
+    "id": "txn_0022",
+    "description": "Campus parking permit",
+    "amount": 300.00,
+    "category": "Transport",
+    "date": "2026-02-20",
+    "createdAt": "2026-02-20T08:00:00.000Z",
+    "updatedAt": "2026-02-20T08:00:00.000Z"
   }
 ]
