@@ -67,3 +67,4 @@ FinTrack was built with accessibility in mind following WCAG principles. It supp
 - Native ARIA attributes & live regions for announcements.
 - Accessible form validation and error handling.
 - Contrast-compliant color palettes in both Light and Dark themes.
+- https://youtu.be/GwksmTh4oaI Here is the demo video
